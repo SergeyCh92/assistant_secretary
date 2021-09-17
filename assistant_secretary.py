@@ -194,10 +194,69 @@ def s():
 	else:
 		display_val = search_shelf(val)
 		dispaly_field.delete(1.0, 'end')
-		print(display_val)
 		dispaly_field.insert(1.0, display_val)
 		input_field.delete(0, 'end')
 
+def a_display(num_question):
+	dispaly_field.delete(1.0, 'end')
+	dispaly_field.insert(1.0, num_question)
+
+type_doc = ''
+person = ''
+number_doc = ''
+number_shelf = ''
+
+def a(doc=documents, my_dir=directories):
+	my_list = [i for i in my_dir]
+	my_str = ''
+	count = 0
+	for i in my_list:
+		if count != len(my_list) - 1:
+			my_str += i + ', '
+			count += 1
+		else:
+			my_str += i
+
+	global type_doc
+	global person
+	global number_doc
+	global number_shelf
+
+	if not type_doc:
+		a_display('Введите тип документа: (например passport)')
+		type_doc = input_field.get()
+		input_field.delete(0, 'end')
+	if type_doc and not person:
+		a_display('Введите имя владельца: ')
+		person = input_field.get()
+		input_field.delete(0, 'end')
+	if type_doc and person and not number_doc:
+		a_display('Введите номер документа: ')
+		number_doc = input_field.get()
+		input_field.delete(0, 'end')
+	if type_doc and person and number_doc and not number_shelf:
+		dispaly_field.delete(1.0, 'end')
+		dispaly_field.insert(1.0, f'Введите номер полки, на которую хотите поместить досье (выберите из списка - {my_str}): ')
+		number_shelf = input_field.get()
+		input_field.delete(0, 'end')
+
+	if number_shelf:
+		if number_shelf not in my_dir:
+			dispaly_field.delete(1.0, 'end')
+			dispaly_field.insert(1.0, 'Выбранная Вами полка не существует. Повторите вызов команды и выберите полку из предложенного списка.')
+			type_doc = ''
+			person = ''
+			number_doc = ''
+			number_shelf = ''
+		else:
+			doc.append({'type': type_doc, 'number': number_doc, 'name': person})
+			my_dir[number_shelf].append(number_doc)
+			dispaly_field.delete(1.0, 'end')
+			dispaly_field.insert(1.0, 'Введенные Вами данные успешно добавлены.')
+			type_doc = ''
+			person = ''
+			number_doc = ''
+			number_shelf = ''
 
 win = tk.Tk()
 win.minsize(500, 350)
@@ -215,6 +274,7 @@ btn_l = tk.Button(text='l', font=('Times new roman', 13), command=pl)
 btn_h = tk.Button(text='h', font=('Times new roman', 13), command=h)
 btn_q = tk.Button(text='q', font=('Times new roman', 13), activebackground='red', command=lambda : sys.exit())
 btn_s = tk.Button(text='s', font=('Times new roman', 13), command=s)
+btn_ad = tk.Button(text='a', font=('Times new roman', 13), command=a)
 
 dispaly_field.grid(row=0, column=0, columnspan=8, stick='we', padx=5)
 input_field.grid(row=1, column=0, stick='we', columnspan=8, padx=5, pady=3)
@@ -224,5 +284,6 @@ btn_l.grid(row=2, column=1, stick='we', padx=5, pady=3)
 btn_h.grid(row=2, column=2, stick='we', padx=5, pady=3)
 btn_q.grid(row=2, column=3, stick='we', padx=5, pady=3)
 btn_s.grid(row=2, column=4, stick='we', padx=5, pady=3)
+btn_ad.grid(row=2, column=5, stick='we', padx=5, pady=3)
 
 win.mainloop()
