@@ -146,17 +146,18 @@ text1 = '''Для работы с документами Вам доступны
 	q - quit - команда, которая завершит работу программы
 	h - help - повторно выведет данное меню '''
 
-comm_dict = {
-	'p': print_name,
-	's': search_shelf,
-	'l': print_list,
-	'a': add_doc,
-	'd': del_doc,
-	'm': move_doc,
-	'as': add_shelf,
-	'q': sys.exit,
-	'h': lambda: print(text1)
-}
+# словарь использовался для консольной версии
+# comm_dict = {
+# 	'p': print_name,
+# 	's': search_shelf,
+# 	'l': print_list,
+# 	'a': add_doc,
+# 	'd': del_doc,
+# 	'm': move_doc,
+# 	'as': add_shelf,
+# 	'q': sys.exit,
+# 	'h': lambda: print(text1)
+# }
 
 # цикл использовался для консольной версии программы
 # print(text)
