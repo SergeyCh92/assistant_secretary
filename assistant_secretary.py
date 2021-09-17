@@ -75,9 +75,9 @@ def add_doc(doc=documents, my_dir=directories):
 		my_dir[number_shelf].append(number_doc)
 		print('Введенные Вами данные успешно добавлены.')
 
-def del_doc(doc=documents, my_dir=directories):
+def del_doc(number ,doc=documents, my_dir=directories):
 	available = False
-	number = input('Введите номер документа подлежащего удалению: ')
+	# number = input('Введите номер документа подлежащего удалению: ')
 	for el in my_dir.values():
 		if number in el:
 			available = True
@@ -91,15 +91,15 @@ def del_doc(doc=documents, my_dir=directories):
 			for i in num:
 				if i == number:
 					my_dir[shelf].remove(number)
-					print(f'Документ номер {number} удален с полки {shelf}.')
+					# print(f'Документ номер {number} удален с полки {shelf}.')
 					end = True
 					break
 		for el in doc:
 			if el['number'] == number:
 				doc.remove(el)
-				break
+				return f'Документ номер {number} удален с полки {shelf}.'
 	else:
-		print('Документ с указанным Вами номером не существует.')
+		return 'Документ с указанным Вами номером не существует.'
 
 def move_doc(doc=documents, my_dir=directories):
 	available = False
@@ -198,9 +198,9 @@ def s():
 		dispaly_field.insert(1.0, display_val)
 		input_field.delete(0, 'end')
 
-def a_display(num_question):
+def a_display(question):
 	dispaly_field.delete(1.0, 'end')
-	dispaly_field.insert(1.0, num_question)
+	dispaly_field.insert(1.0, question)
 
 type_doc = ''
 person = ''
@@ -259,6 +259,15 @@ def a(doc=documents, my_dir=directories):
 			number_doc = ''
 			number_shelf = ''
 
+def d():
+	dispaly_field.delete(1.0, 'end')
+	val = input_field.get()
+	a_display('Введите номер документа, подлежащего удалению:')
+	if val:
+		a_display(del_doc(val))
+		input_field.delete(0, 'end')
+
+
 win = tk.Tk()
 win.minsize(500, 350)
 win.maxsize(1000, 700)
@@ -276,6 +285,7 @@ btn_h = tk.Button(text='h', font=('Times new roman', 13), command=h)
 btn_q = tk.Button(text='q', font=('Times new roman', 13), activebackground='red', command=lambda : sys.exit())
 btn_s = tk.Button(text='s', font=('Times new roman', 13), command=s)
 btn_ad = tk.Button(text='a', font=('Times new roman', 13), command=a)
+btn_d = tk.Button(text='d', font=('Times new roman', 13), command=d)
 
 dispaly_field.grid(row=0, column=0, columnspan=8, stick='we', padx=5)
 input_field.grid(row=1, column=0, stick='we', columnspan=8, padx=5, pady=3)
@@ -286,5 +296,6 @@ btn_h.grid(row=2, column=2, stick='we', padx=5, pady=3)
 btn_q.grid(row=2, column=3, stick='we', padx=5, pady=3)
 btn_s.grid(row=2, column=4, stick='we', padx=5, pady=3)
 btn_ad.grid(row=2, column=5, stick='we', padx=5, pady=3)
+btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3)
 
 win.mainloop()
