@@ -101,15 +101,15 @@ def del_doc(number ,doc=documents, my_dir=directories):
 	else:
 		return 'Документ с указанным Вами номером не существует.'
 
-def move_doc(doc=documents, my_dir=directories):
+def move_doc(shelf, number ,doc=documents, my_dir=directories):
 	available = False
 	old_shelf = ''
-	shelf = input('Введите номер полки, на которую Вы хотите переместить документ: ')
-	number = input('Введите номер документа, который необходимо переместить: ')
+	# shelf = input('Введите номер полки, на которую Вы хотите переместить документ: ')
+	# number = input('Введите номер документа, который необходимо переместить: ')
 
 	if shelf not in my_dir:
-		print('Указанная Вами полка отсутствует.')
-		return None
+		# print('Указанная Вами полка отсутствует.')
+		return 'Указанная Вами полка отсутствует.'
 	for sh, num in my_dir.items():
 		if number in num:
 			available = True
@@ -119,9 +119,9 @@ def move_doc(doc=documents, my_dir=directories):
 	if available:
 		my_dir[shelf].append(number)
 		my_dir[old_shelf].remove(number)
-		print(f'Документ {number} перемещен на полку {shelf}.')
+		return f'Документ {number} перемещен на полку {shelf}.'
 	else:
-		print('Указанный Вами документ отсутствует.')
+		return 'Указанный Вами документ отсутствует.'
 
 def add_shelf(my_dir=directories):
 	shelf = input('Введите номер полки, которую хотите добавить: ')
@@ -267,35 +267,56 @@ def d():
 		a_display(del_doc(val))
 		input_field.delete(0, 'end')
 
+shelf = ''
+number = ''
+
+def m():
+	global shelf
+	global number
+
+	if not shelf:
+		a_display('Введите номер полки, на которую Вы хотите переместить документ: ')
+		shelf = input_field.get()
+		input_field.delete(0, 'end')
+	if shelf and not number:
+		a_display('Введите номер документа, который необходимо переместить: ')
+		number = input_field.get()
+		input_field.delete(0, 'end')
+	if number:
+		a_display(move_doc(shelf, number))
+		input_field.delete(0, 'end')
+		shelf = ''
+		number = ''
+
+def create_btn(r, c, name, com):
+	return tk.Button(text=name, font=('Times new roman', 13), command=com). grid(row=r, column=c, stick='we', padx=5, pady=3)
+
 
 win = tk.Tk()
 win.minsize(500, 350)
 win.maxsize(1000, 700)
 win.title('Помощник секретаря')
 win.geometry('1000x700+460+200')
-win.config(bg='#928194')
+win.config(bg='#3a506e')
 win.resizable(False, False)
 
 dispaly_field = tk.Text(win, font=('Arial', 15), width=89, height=17)
 dispaly_field.insert(1.0, text1)
 input_field = tk.Entry(win, font=('Arial', 10), width=89)
-btn_p = tk.Button(text='p', font=('Times new roman', 13), command=p)
-btn_l = tk.Button(text='l', font=('Times new roman', 13), command=pl)
-btn_h = tk.Button(text='h', font=('Times new roman', 13), command=h)
 btn_q = tk.Button(text='q', font=('Times new roman', 13), activebackground='red', command=lambda : sys.exit())
-btn_s = tk.Button(text='s', font=('Times new roman', 13), command=s)
-btn_ad = tk.Button(text='a', font=('Times new roman', 13), command=a)
 btn_d = tk.Button(text='d', font=('Times new roman', 13), command=d)
 
 dispaly_field.grid(row=0, column=0, columnspan=8, stick='we', padx=5)
 input_field.grid(row=1, column=0, stick='we', columnspan=8, padx=5, pady=3)
 
-btn_p.grid(row=2, column=0, stick='we', padx=5, pady=3)
-btn_l.grid(row=2, column=1, stick='we', padx=5, pady=3)
-btn_h.grid(row=2, column=2, stick='we', padx=5, pady=3)
+create_btn(2, 0, 'p', p)
+create_btn(2, 1, 'l', pl)
+create_btn(2, 2, 'h', h)
+create_btn(2, 4, 's', s)
+create_btn(2, 5, 'a', a)
+create_btn(3, 0, 'm', m)
+
 btn_q.grid(row=2, column=3, stick='we', padx=5, pady=3)
-btn_s.grid(row=2, column=4, stick='we', padx=5, pady=3)
-btn_ad.grid(row=2, column=5, stick='we', padx=5, pady=3)
-btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3)
+btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3, columnspan=2)
 
 win.mainloop()
