@@ -13,6 +13,11 @@ directories = {
         '3': []
       }
 
+def press_key(event):
+	global last_btn
+	if event.char == '\r':
+		(last_btn)()
+
 def print_name(num, doc=documents):
 	request = num
 	for el in doc:
@@ -165,10 +170,11 @@ text1 = '''Для работы с документами Вам доступны
 # 	print()
 # 	command = input('Введите команду: ')
 # 	command = command.lower().strip()
-# 	comm_dict.get(command, error)()
+	# comm_dict.get(command, error)()
 
 def p():
 	"""Принимает номер документа и выводит на экран имя владельца"""
+	global last_btn
 	val = input_field.get()
 	if not val:
 		dispaly_field.delete(1.0, 'end')
@@ -178,16 +184,22 @@ def p():
 		dispaly_field.delete(1.0, 'end')
 		dispaly_field.insert(1.0, display_val)
 		input_field.delete(0, 'end')
+	last_btn = p
 
 def pl():
+	global last_btn
 	dispaly_field.delete(1.0, 'end')
 	dispaly_field.insert(1.0, print_list())
+	last_btn = pl
 
 def h():
+	global last_btn
 	dispaly_field.delete(1.0, 'end')
 	dispaly_field.insert(1.0, text1)
+	last_btn = h
 
 def s():
+	global last_btn
 	val = input_field.get()
 	if not val:
 		dispaly_field.delete(1.0, 'end')
@@ -197,6 +209,7 @@ def s():
 		dispaly_field.delete(1.0, 'end')
 		dispaly_field.insert(1.0, display_val)
 		input_field.delete(0, 'end')
+	last_btn = s
 
 def a_display(question):
 	dispaly_field.delete(1.0, 'end')
@@ -208,6 +221,7 @@ number_doc = ''
 number_shelf = ''
 
 def a(doc=documents, my_dir=directories):
+	global last_btn
 	my_list = [i for i in my_dir]
 	my_str = ''
 	count = 0
@@ -258,19 +272,23 @@ def a(doc=documents, my_dir=directories):
 			person = ''
 			number_doc = ''
 			number_shelf = ''
+	last_btn = a
 
 def d():
+	global last_btn
 	dispaly_field.delete(1.0, 'end')
 	val = input_field.get()
 	a_display('Введите номер документа, подлежащего удалению:')
 	if val:
 		a_display(del_doc(val))
 		input_field.delete(0, 'end')
+	last_btn = d
 
 shelf = ''
 number = ''
 
 def m():
+	global last_btn
 	global shelf
 	global number
 
@@ -287,6 +305,9 @@ def m():
 		input_field.delete(0, 'end')
 		shelf = ''
 		number = ''
+	last_btn = m
+
+last_btn = h
 
 def create_btn(r, c, name, com):
 	return tk.Button(text=name, font=('Times new roman', 13), command=com). grid(row=r, column=c, stick='we', padx=5, pady=3)
@@ -318,5 +339,7 @@ create_btn(3, 0, 'm', m)
 
 btn_q.grid(row=2, column=3, stick='we', padx=5, pady=3)
 btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3, columnspan=2)
+
+win.bind('<Key>', press_key)
 
 win.mainloop()
