@@ -14,11 +14,13 @@ directories = {
       }
 
 def press_key(event):
+	'''Проверка, нажал ли пользователь enter'''
 	global last_btn
 	if event.char == '\r':
 		(last_btn)()
 
 def print_name(num, doc=documents):
+	'''Возвращает имя, фамилию владельца документа, с введенным номером'''
 	request = num
 	for el in doc:
 		if el['number'] == num:
@@ -29,6 +31,7 @@ def print_name(num, doc=documents):
 	return 'Документ с указанным номером отсутствует.'
 
 def search_shelf(num ,my_dir=directories):
+	'''Возвращает номер полки, на которой находится документ'''
 	available = False
 	# number = input('Введите номер документа: ')
 	for el in my_dir.values():
@@ -137,8 +140,8 @@ def add_shelf(my_dir=directories):
 		my_dir[shelf] = []
 		print(f'Полка номер {shelf} успешно добавлена.')
 
-def error():
-	print('Введенная Вами команда не существует.')
+# def error(): ф-ия использовалась в консольной версии
+# 	print('Введенная Вами команда не существует.')
 
 text1 = '''Для работы с документами Вам доступны следующие команды:
 	p – people - команда, которая спросит номер документа и выведет имя человека, которому он принадлежит
@@ -187,18 +190,22 @@ def p():
 	last_btn = p
 
 def pl():
+	'''Выводит на экран содержание словаря (тип документа, имя и номер)'''
 	global last_btn
 	dispaly_field.delete(1.0, 'end')
 	dispaly_field.insert(1.0, print_list())
 	last_btn = pl
 
 def h():
+	'''Выводит на экран содержание переменной text1 (справочная информация по назначению кнопок)'''
 	global last_btn
 	dispaly_field.delete(1.0, 'end')
 	dispaly_field.insert(1.0, text1)
 	last_btn = h
 
 def s():
+	'''Функция взаимосвязана с переменной в глобальном namespace, поэтому изначально запрашивает номер документа,
+	при втором нажатии кнопки выводит номер полки, на которой находится документ'''
 	global last_btn
 	val = input_field.get()
 	if not val:
@@ -212,15 +219,20 @@ def s():
 	last_btn = s
 
 def a_display(question):
+	'''Очищает текст на экране и заменяет его на строковое значение question'''
 	dispaly_field.delete(1.0, 'end')
 	dispaly_field.insert(1.0, question)
 
+# нижеуказанные переменные необходимы для корректной работы функции "a": благодаря тому, что переменные являются глобальными,
+# при нажатии кнопки, на экран транслируется разный текст, а функция получает необходимые аргументы
 type_doc = ''
 person = ''
 number_doc = ''
 number_shelf = ''
 
 def a(doc=documents, my_dir=directories):
+	'''При каждом нажатии меняется вопрос на экране, в результате ответов пользователя,
+	функция поэтапно набирает аргументы необходимые для их добавления в словарь'''
 	global last_btn
 	my_list = [i for i in my_dir]
 	my_str = ''
@@ -307,27 +319,30 @@ def m():
 		number = ''
 	last_btn = m
 
+# глобальная переменная last_btn необходима для работы функции press_key, в нее после нажатия каждой кнопки помещаем функцию,
+# ответственную за последнюю кнопку, по умолчанию помещена команада, ответственная за help
 last_btn = h
 
 def create_btn(r, c, name, com):
+	'''Создает кнопку'''
 	return tk.Button(text=name, font=('Times new roman', 13), command=com). grid(row=r, column=c, stick='we', padx=5, pady=3)
 
 
 win = tk.Tk()
-win.minsize(500, 350)
-win.maxsize(1000, 700)
+# win.minsize(500, 350)
+# win.maxsize(1000, 700)
 win.title('Помощник секретаря')
-win.geometry('1000x700+460+200')
+win.geometry('816x440+460+200')
 win.config(bg='#3a506e')
 win.resizable(False, False)
 
-dispaly_field = tk.Text(win, font=('Arial', 15), width=89, height=17)
+dispaly_field = tk.Text(win, font=('Times new roman', 14), width=89, height=17)
 dispaly_field.insert(1.0, text1)
 input_field = tk.Entry(win, font=('Arial', 10), width=89)
 btn_q = tk.Button(text='q', font=('Times new roman', 13), activebackground='red', command=lambda : sys.exit())
 btn_d = tk.Button(text='d', font=('Times new roman', 13), command=d)
 
-dispaly_field.grid(row=0, column=0, columnspan=8, stick='we', padx=5)
+dispaly_field.grid(row=0, column=0, columnspan=8, stick='we', padx=5, pady=3)
 input_field.grid(row=1, column=0, stick='we', columnspan=8, padx=5, pady=3)
 
 create_btn(2, 0, 'p', p)
@@ -335,11 +350,12 @@ create_btn(2, 1, 'l', pl)
 create_btn(2, 2, 'h', h)
 create_btn(2, 4, 's', s)
 create_btn(2, 5, 'a', a)
-create_btn(3, 0, 'm', m)
+create_btn(2, 7, 'm', m)
 
 btn_q.grid(row=2, column=3, stick='we', padx=5, pady=3)
-btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3, columnspan=2)
+btn_d.grid(row=2, column=6, stick='we', padx=5, pady=3)
 
+# Отслеживает нажатия клавиш пользователем
 win.bind('<Key>', press_key)
 
 win.mainloop()
